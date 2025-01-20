@@ -15,7 +15,7 @@ df["TitleAndDescription"] = df["Title"] + " - " + df["Short Description (< 5 wor
 df["Year"].value_counts()
 df_2024 = df[df["Year"] == 2024]
 df_until_2023 = df[df["Year"] < 2024]
-df_until_2023["Year"].value_counts()
+pd.Series(df_until_2023["Year"]).value_counts()
 
 
 from langchain.embeddings import SentenceTransformerEmbeddings
@@ -39,7 +39,7 @@ df_until_2023["TitleAndDescription"] = df_until_2023["TitleAndDescription"].asty
 from langchain_qdrant import QdrantVectorStore
 
 qdrant = QdrantVectorStore.from_texts(
-    texts=df_until_2023["TitleAndDescription"].to_list(),
+    texts=pd.Series(df_until_2023["TitleAndDescription"]).to_list(),
     embedding=embedding_function,
     metadatas=metadatas,
     url=config["Qdrant"]["URL"],
@@ -59,7 +59,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 
 llm_gemini = ChatGoogleGenerativeAI(
     model="gemini-2.0-flash-exp",
-    google_api_key=config["Gemini"]["API_KEY"],
+    api_key=config["Gemini"]["API_KEY"],
 )
 
 from langchain_core.output_parsers import StrOutputParser
@@ -120,7 +120,7 @@ df_2024["TitleAndDescription"] = df_2024["TitleAndDescription"].astype(str)
 uuids = [str(uuid4()) for _ in range(len(df_2024))]
 
 qdrant.add_texts(
-    texts=df_2024["TitleAndDescription"].to_list(),
+    texts=pd.Series(df_2024["TitleAndDescription"]).to_list(),
     metadatas=metadatas,
     ids=uuids,
 )
