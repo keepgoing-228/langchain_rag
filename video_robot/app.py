@@ -53,6 +53,8 @@ def home():
 @app.route("/submit", methods=["POST"])
 def submit():
     print("Submit!")
+    result = ""
+    filename = ""
     if request.method == "POST":
         if "file1" not in request.files:
             print("No file part")
@@ -62,7 +64,8 @@ def submit():
             print("No selected file")
             return render_template("index.html")
         if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
+            if file.filename is not None:
+                filename = secure_filename(file.filename)
             file.save(os.path.join(app.config["UPLOAD_FOLDER"], filename))
             print(filename)
             global video_file_gemini
@@ -74,6 +77,7 @@ def submit():
             filename=filename,
         )
     else:
+        result = "上傳失敗"
         return render_template("index.html", prediction="Method not allowed")
 
 
