@@ -40,7 +40,7 @@ gemini_model = genai.GenerativeModel(
         "top_p": 0.95,
         "top_k": 64,
         "max_output_tokens": 8192,
-    },
+    },  # pyright: ignore
     system_instruction="請用繁體中文回答以下問題。",
 )
 
@@ -81,7 +81,7 @@ def submit():
         return render_template("index.html", prediction="Method not allowed")
 
 
-@app.route("/call_gemini", methods=["POST"])
+@app.route("/call_gemini", methods=["POST"])  # pyright: ignore
 def call_gemini():
     if request.method == "POST":
         print("POST!")
